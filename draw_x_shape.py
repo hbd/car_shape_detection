@@ -26,6 +26,10 @@ while True:
     contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
     # cv2.drawContours(frame, contours, -1, (0, 255, 0), 3)
 
+    # Get frame width and height
+    frameWidth = video_capture.get(3)
+    frameHeight = video_capture.get(4)
+
     # Find the largest contour
     if contours:
         idx_biggest = 0
@@ -45,6 +49,12 @@ while True:
         x, y, w, h = cv2.boundingRect(contours[idx_biggest])
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
         cv2.putText(frame, "X", (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        if (cX <= frameWidth/3):
+            cv2.putText(frame, "LEFT", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        elif ((cX > frameWidth/3) and (cX < frameWidth/3 * 2)):
+            cv2.putText(frame, "CENTER", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        else:
+            cv2.putText(frame, "RIGHT", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
 
     cv2.imshow('frame', frame)
     cv2.imshow('mask', mask)
